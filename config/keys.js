@@ -1,7 +1,9 @@
-//export codes & make it available to other files inside our app
-module.exports = {
-    googleClientID: '774380716330-htgqvshs7h3p513n7cp1kiibbug51j77.apps.googleusercontent.com',
-    googleClientSecret: 'M_TvZfs3hk4hDUE72CM6AqW1',
-    mongoURI: 'mongodb+srv://dbUser:1e5xD1wgj4qr0EjF@emily-dev.bk52x.mongodb.net/test?retryWrites=true',
-    cookieKey: 'ihfkjastesghpwdst'
-};
+// keys.js - figure out what set of credentials to return
+if (process.env.NODE_ENV === 'production'){
+    // in production - return the prod set of keys
+    module.exports = require('./prod');
+} else {
+    // in development - return the dev keys
+    module.exports = require('./dev');
+}
+
