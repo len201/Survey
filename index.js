@@ -1,6 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const cookieSession = require('cookie-sesson'); //acess cookie
+const cookieSession = require('cookie-session'); //acess cookie
 const passport = require('passport'); //tell passport to use cookie
 const keys = require('./config/keys');
 require('./models/User');
