@@ -1,26 +1,34 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { BrowserRouter, Route } from 'react-router-dom';
+import Header from './Header';
+import { connect } from 'react-redux';
+import * as actions from '../actions';
 
 //dummy setup
-const Header = () => <h2>Header</h2>;
 const Dashboard = () => <h2>Dashboard</h2>;
 const SurveyNew = () => <h2>SurveyNew</h2>;
 const Landing = () => <h2>Landing</h2>;
 
-const App = () => {
-    return (
-        <div>
-            <BrowserRouter>
-                <div>
-                    <Header />
-                    {/*exact即exact={true} 只要有下级目录，上级目录就要加exact*/}
-                    <Route exact path="/" component={ Landing } />
-                    <Route exact path="/surveys" component={ Dashboard }/>
-                    <Route path="/surveys/new" component={ SurveyNew }/>
-                </div>
-            </BrowserRouter>
-        </div>
-    );
+class App extends Component {
+    componentDidMount() {
+        this.props.fetchUser();
+    }
+
+    render() {
+        return (
+            <div className="container">
+                <BrowserRouter>
+                    <div>
+                        <Header />
+                        <Route exact path="/" component={ Landing } />
+                        <Route exact path="/surveys" component={ Dashboard }/>
+                        <Route path="/surveys/new" component={ SurveyNew }/>
+                    </div>
+                </BrowserRouter>
+            </div>
+        );
+    }
 };
 
-export default App;
+// once pass in all actions, they're assigned to App compo as props
+export default connect(null, actions)(App);
