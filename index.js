@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cookieSession = require('cookie-session'); //acess cookie
 const passport = require('passport'); //tell passport to use cookie
+const bodyParser =  require('body-parser');
 const keys = require('./config/keys');
 require('./models/User');
 require('./services/passport');
@@ -9,6 +10,9 @@ require('./services/passport');
 mongoose.connect(keys.mongoURI);
 
 const app = express();
+
+//all the app.use: middlewares
+app.use(bodyParser.json());
 
 app.use(
     cookieSession({
@@ -23,6 +27,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 require('./routes/authRoutes')(app);
+require('./routes/billingRoutes')(app);
 
 // this line is for heroku:
 // if Heroku already defined an envir var, sign that var to port
