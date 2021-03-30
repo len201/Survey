@@ -20,9 +20,3 @@ module.exports = app => {
         });
     });
 };
-
-
-
-//authenticated
-
-//has credit
