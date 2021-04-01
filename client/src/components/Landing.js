@@ -5,7 +5,7 @@ const Landing = () => {
     return (
         <div style={{ textAlign: 'center' }}>
             <h1>
-                Course quality feedback management system
+                Course Feedback System
             </h1>
             Survey collection never become so easy
         </div>
