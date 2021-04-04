@@ -4,6 +4,7 @@ import React, { Component } from 'react';
 import { reduxForm, Field } from 'redux-form'; //allow to talk with the top store, Field: any input
 import { Link } from 'react-router-dom';
 import SurveyField from './SurveyField';
+import validateEmails from '../../utils/validateEmails';
 
 const FIELDS = [
     { label: 'Survey Title', name: 'title' },
@@ -30,7 +31,8 @@ class SurveyForm extends Component {
     render() {
         return (
             <div>
-                <form onSubmit={this.props.handleSubmit(values => console.log(values))}
+                <form
+                    onSubmit={this.props.handleSubmit(values => console.log(values))}
                 >
                     {this.renderFields()}
                     <Link to="/surveys" className="red btn-flat white-text">
@@ -46,6 +48,20 @@ class SurveyForm extends Component {
     }
 }
 
+function validate(values) {
+    const errors = {};
+
+    _.each(FIELDS, ({ name }) => {
+        if (!values[name]) {
+            errors[name] = 'You must provide a value';
+        }
+    });
+
+    errors.emails = validateEmails(values.emails || '');
+    return errors;
+}
+
 export default reduxForm({
+    validate,
     form: 'surveyForm',
 })(SurveyForm);
