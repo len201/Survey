@@ -1,33 +1,51 @@
+const _ = require('lodash');
+const { Path } = require('path-parser');
+const { URL } = require('url');
 const mongoose = require('mongoose');
 const requireLogin = require('../middlewares/requireLogin');
 const requireCredits = require('../middlewares/requireCredits');
 const Mailer = require('../services/Mailer');
-const surveyTemplate = require('../services/emailTemplate/surveyTemplate');
+const surveyTemplate = require('../services/emailTemplates/surveyTemplate');
 
 const Survey = mongoose.model('surveys');
 
-module.exports = app => {
-    //when receiving user feedback
-    app.get('/api/surveys/thanks',(req,res) => {
-        res.send('Thanks for submitting the survey. Your feedback is important to us.');
+module.exports = (app) => {
+    app.get('/api/surveys/thanks', (req, res) => {
+        res.send('Thanks for voting!');
     });
 
+    app.post('/api/surveys/webhooks', (req, res) => {
+        const p = new Path('/api/surveys/:surveyId/:choice');
 
-    app.post('/api/surveys',requireLogin, requireCredits, async (req,res) => {
-        //props of backend server
+        const events = _.chain(req.body)
+            .map(({ email, url }) => {
+                const match = p.test(new URL(url).pathname);
+                if (match) {
+                    return { email, surveyId: match.surveyId, choice: match.choice };
+                }
+            })
+            .compact()
+            .uniqBy('email', 'surveyId')
+            .value();
+
+        console.log(events);
+
+        res.send({});
+    });
+
+    app.post('/api/surveys', requireLogin, requireCredits, async (req, res) => {
         const { title, subject, body, recipients } = req.body;
-        //create a new instance of a survey
-        const survey = new Survery({
+
+        const survey = new Survey({
             title,
             subject,
             body,
-            recipients: recipients.split(',').map(
-                email => ({ email: email.trim() })),
-            _user:req.user.id,
-            dateSent: Date.now()
+            recipients: recipients.split(',').map((email) => ({ email })),
+            _user: req.user.id,
+            dateSent: Date.now(),
         });
 
-        // send an email
+        // Great place to send an email
         const mailer = new Mailer(survey, surveyTemplate(survey));
 
         try {
@@ -37,8 +55,8 @@ module.exports = app => {
             const user = await req.user.save();
 
             res.send(user);
-        } catch (e) {
-            res.status(422).send(e);
+        } catch (err) {
+            res.status(422).send(err);
         }
     });
 };
