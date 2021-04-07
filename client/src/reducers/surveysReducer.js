@@ -1,5 +1,4 @@
 import { FETCH_SURVEYS } from "../actions/types";
-import {act} from "@testing-library/react";
 
 export default function (state = [], action) {
     switch (action.type) {

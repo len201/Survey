@@ -1,12 +1,12 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
-const RecipientSchema = require('./Recipient'); //change1
+const RecipientSchema = require('./Recipient');
 
-const surverySchema = new Schema({
+const surveySchema = new Schema({
     title: String,
     body: String,
     subject: String,
-    recipients: [RecipientSchema],//change2
+    recipients: [RecipientSchema],
     yes: { type: Number, default: 0 },
     no: { type: Number, default: 0 },
     _user: { type: Schema.Types.ObjectId, REF: 'User' }, //relationship field
@@ -14,4 +14,4 @@ const surverySchema = new Schema({
     lastResponded: Date
 });
 
-mongoose.model('surveys', surverySchema);
+mongoose.model('surveys', surveySchema);

@@ -9,6 +9,6 @@ const Landing = () => {
             </h1>
             Survey collection never become so easy
         </div>
-    )
-}
+    );
+};
 export default Landing;
